@@ -1,0 +1,23 @@
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-slide {
+  display: flex;
+  animation: slide 20s linear infinite;
+}
+.paused {
+  animation-play-state: paused;
+}
