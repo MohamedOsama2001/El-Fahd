@@ -10,7 +10,11 @@ class AdsService {
     return (await axiosApi.get<IProductRes>(`/products/${id}`)).data;
   }
   async addProduct(productData:IProductData){
-    return (await axiosApi.post<IProductRes>("/products",productData)).data
+    return (await axiosApi.post<IProductRes>("/products",productData,{
+      headers:{
+        "Content-Type":"multipart/form-data"
+      }
+    })).data
   }
 
 
