@@ -1,5 +1,4 @@
 import QueryKeys from "@/enums";
-import type { IProductData } from "@/interface/ads";
 import adsService from "@/services/adsService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -21,7 +20,7 @@ class AdsQueries {
   useAddProduct(){
     const queryClient=useQueryClient()
     return useMutation({
-      mutationFn:(productData:IProductData)=>adsService.addProduct(productData),
+      mutationFn:({productData,token,categoryId}:{productData:FormData,token:string,categoryId:string})=>adsService.addProduct(productData,token,categoryId),
       onSuccess:()=>{
         queryClient.invalidateQueries({queryKey:[QueryKeys.PRODUCTS]})
       }

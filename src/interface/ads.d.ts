@@ -12,7 +12,7 @@ export interface IProductData {
   description: string;
   location: string;
   paymentMethod: string;
-  price: number;
+  price: string;
   name: string;
   phone: string;
   contactMethod: string;

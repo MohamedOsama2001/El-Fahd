@@ -1,5 +1,5 @@
 import PageHeadr from '@/components/common/PageHeader'
-import AddProductForm from '@/components/froms/adsForms/AddProduct'
+import { AddProductForm } from '@/components/froms/adsForms/AddProduct'
 interface Props {}
 
 function AddProduct(props: Props) {
