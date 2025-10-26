@@ -25,6 +25,7 @@ import { productSchema } from "@/validations/adsValidation";
 import FormButton from "@/components/ui/FormButton";
 import cookieService from "@/utils/cookieService";
 import ads from "@/lib/queries/ads";
+import { toast } from "react-toastify";
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
@@ -65,7 +66,7 @@ export function AddProductForm() {
             onSuccess: () => {
                 form.reset();
                 setImagePreviews([]);
-                alert("Product added successfully!")
+                toast.success("Product added successfully!")
             },
             onError: (error) => {
                 console.error("Error adding product:", error);
@@ -92,6 +93,7 @@ export function AddProductForm() {
             <div className="bg-white rounded-md shadow-md w-[90%] md:w-[70%] lg:w-[50%] m-auto text-center p-10 space-y-5">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-0">
                         <FormField
                             control={form.control}
                             name="category"
@@ -106,10 +108,10 @@ export function AddProductForm() {
                                         </FormControl>
                                         <SelectContent>
                                             {isLoadingCategory ? (
-                                                <SelectItem value="loading" disabled>Loading...</SelectItem>
+                                                <SelectItem className="text-base" value="loading" disabled>Loading...</SelectItem>
                                             ) : (
                                                 categoryData?.data.map((category) => (
-                                                    <SelectItem key={category._id} value={category._id}>
+                                                    <SelectItem className="text-base" key={category._id} value={category._id}>
                                                         {category.name}
                                                     </SelectItem>
                                                 ))
@@ -140,7 +142,7 @@ export function AddProductForm() {
                                             </FormControl>
                                             <SelectContent>
                                                 {selectedCategory.subCategories.map((sub) => (
-                                                    <SelectItem key={sub} value={sub}>
+                                                    <SelectItem className="text-base" key={sub} value={sub}>
                                                         {sub}
                                                     </SelectItem>
                                                 ))}
@@ -151,6 +153,7 @@ export function AddProductForm() {
                                 )}
                             />
                         )}
+                        </div>
                         {/* Title */}
                         <FormField
                             control={form.control}
@@ -287,14 +290,14 @@ export function AddProductForm() {
                             )}
                         />
 
-                        <div className="flex justify-between">
+                        <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between ">
                             {/* Payment Method */}
                         <FormField
                             control={form.control}
                             name="paymentMethod"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Payment Method</FormLabel>
+                                    <FormLabel className="font-bold text-base">Payment Method</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
@@ -302,8 +305,8 @@ export function AddProductForm() {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="cash">Cash</SelectItem>
-                                            <SelectItem value="online">Online</SelectItem>
+                                            <SelectItem className="text-base" value="cash">Cash</SelectItem>
+                                            <SelectItem className="text-base" value="online">Online</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -317,17 +320,17 @@ export function AddProductForm() {
                             name="contactMethod"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Preferred Contact Method</FormLabel>
+                                    <FormLabel className="font-bold text-base">Preferred Contact Method</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a contact method" />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="phone">Phone Call</SelectItem>
-                                            <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                                            <SelectItem value="chat">Both</SelectItem>
+                                        <SelectContent >
+                                            <SelectItem className="text-base" value="Phone Number">Phone Call</SelectItem>
+                                            <SelectItem className="text-base" value="WhatsApp">WhatsApp</SelectItem>
+                                            <SelectItem className="text-base" value="Both">Both</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />

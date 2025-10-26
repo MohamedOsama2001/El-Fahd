@@ -28,6 +28,10 @@ export interface IProductRes {
   status: string;
   data: IProductData;
 }
+export interface IAddProductRes{
+  status:string;
+  message:string
+}
 //* reels
 export interface IReelData {
   _id: string;

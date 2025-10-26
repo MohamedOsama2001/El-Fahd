@@ -1,5 +1,5 @@
 import axiosApi from "@/config/axios.config";
-import type { IProductRes, IProductsRes, IReelsRes } from "@/interface/ads";
+import type { IAddProductRes, IProductRes, IProductsRes, IReelsRes } from "@/interface/ads";
 
 class AdsService {
   //* products service
@@ -10,7 +10,7 @@ class AdsService {
     return (await axiosApi.get<IProductRes>(`/products/${id}`)).data;
   }
   async addProduct(productData: FormData, token: string,categoryId:string) {
-    return (await axiosApi.post<IProductRes>(`/products/${categoryId}`, productData, {
+    return (await axiosApi.post<IAddProductRes>(`/products/${categoryId}`, productData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: token ? `Bearer ${token}` : undefined,
