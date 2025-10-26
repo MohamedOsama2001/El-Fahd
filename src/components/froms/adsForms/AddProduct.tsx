@@ -26,8 +26,9 @@ import FormButton from "@/components/ui/FormButton";
 import cookieService from "@/utils/cookieService";
 import ads from "@/lib/queries/ads";
 import { toast } from "react-toastify";
+import { ADD_PRODUCT_FORM_INPUTS } from "@/constant";
 
-type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
 
 export function AddProductForm() {
     const token = cookieService.getToken()!
@@ -154,62 +155,36 @@ export function AddProductForm() {
                             />
                         )}
                         </div>
-                        {/* Title */}
-                        <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold text-base">Ad Title</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="e.g., Brand new sofa" {...field} className="h-10 focus:ring-1 focus:ring-red"/>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Description */}
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold text-base">Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Describe your item in detail"
-                                            className="h-20 focus:ring-1 focus:ring-red resize-none" 
-                                            {...field}
-                                            
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Price */}
-                        <FormField
-                            control={form.control}
-                            name="price"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold text-base">Price</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            className="h-10 focus:ring-1 focus:ring-red"
-                                            type="text"
-                                            placeholder="0.00"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        
+                        {ADD_PRODUCT_FORM_INPUTS.map((input) => (
+                            <FormField
+                                key={input.name}
+                                control={form.control}
+                                name={input.name}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="font-bold text-base">{input.label}</FormLabel>
+                                        <FormControl>
+                                            {input.component === 'textarea' ? (
+                                                <Textarea
+                                                    placeholder={input.placeholder}
+                                                    className="h-20 focus:ring-1 focus:ring-red resize-none"
+                                                    {...field}
+                                                    value={field.value as string}
+                                                />
+                                            ) : (
+                                                <Input
+                                                    placeholder={input.placeholder}
+                                                    type={input.type}
+                                                    {...field}
+                                                    value={field.value as string}
+                                                    className="h-10 focus:ring-1 focus:ring-red" />
+                                            )}
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        ))}
 
                         {/* Images */}
                         <FormField
@@ -240,51 +215,6 @@ export function AddProductForm() {
                                             />
                                         ))}
                                     </div>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Location */}
-                        <FormField
-                            control={form.control}
-                            name="location"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold text-base">Location</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="e.g., Cairo, Egypt" {...field} className="h-10 focus:ring-1 focus:ring-red" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Contact Person Name */}
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold text-base">Your Name</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="John Doe" {...field} className="h-10 focus:ring-1 focus:ring-red" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Phone Number */}
-                        <FormField
-                            control={form.control}
-                            name="phone"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold text-base">Phone Number</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="+201234567890" {...field} className="h-10 focus:ring-1 focus:ring-red" />
-                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
