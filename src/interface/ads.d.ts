@@ -48,3 +48,7 @@ export interface IReelsRes{
     status:string;
     data:IReelData[];
 }
+export interface IAddReelsRes{
+  status:string;
+  message:string
+}

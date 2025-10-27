@@ -30,9 +30,18 @@ class AdsQueries {
   useGetReels(token: string) {
     return useQuery({
       queryKey: [QueryKeys.REELS],
-      queryFn: () => adsService.getReels(token),
+      queryFn: () => adsService.getReel(token),
       enabled: !!token,
     });
+  }
+  useAddReel(){
+    const queryClient=useQueryClient()
+    return useMutation({
+      mutationFn:({reelData,token}:{reelData:any,token:string})=>adsService.addReels(reelData,token),
+      onSuccess:()=>{
+        queryClient.invalidateQueries({queryKey:[QueryKeys.REELS]})
+      }
+    })  
   }
 }
 export default new AdsQueries();

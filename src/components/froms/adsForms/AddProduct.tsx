@@ -33,7 +33,7 @@ export function AddProductForm() {
     const token = cookieService.getToken()!
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const { data: categoryData, isLoading: isLoadingCategory } = useGetCategory();
-    const { mutate: addProduct, isPending } = ads.useAddProduct();
+    const { mutateAsync: addProduct, isPending } = ads.useAddProduct();
 
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),

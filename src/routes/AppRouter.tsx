@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Favourites from "@/pages/Favourites";
 import AddProduct from "@/pages/ads/AddProduct";
+import AddReel from "@/pages/ads/AddReel";
 function AppRouter() {
   return (
     <>
@@ -34,6 +35,7 @@ function AppRouter() {
                 </ProtectedRoutes>
               }
             />
+            <Route path="/add-reel" element={<ProtectedRoutes><AddReel/></ProtectedRoutes>}/>
           </Route>
           //* not found routes
           <Route path="*" element={<p>Page Not Found</p>} />

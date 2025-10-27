@@ -16,3 +16,30 @@ export const productSchema = z.object({
     .min(1, "At least one image is required.")
     .max(3, "You can upload a maximum of 3 images."),
 });
+//* reel schema
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const ACCEPTED_VIDEO_TYPES = ["video/mp4", "video/webm"];
+const ALL_ACCEPTED_TYPES = [...ACCEPTED_IMAGE_TYPES, ...ACCEPTED_VIDEO_TYPES];
+export const reelSchema=z.object({
+  title: z
+    .string()
+    .min(2, { message: "Title must be at least 2 characters." })
+    .max(100, { message: "Title must be 100 characters or less." }),
+  
+  phone: z
+    .string()
+    .regex(/^\+?[0-9\s-]{10,15}$/, { message: "Please enter a valid phone number." }),
+    
+  media: z
+    .instanceof(FileList)
+    .refine((files) => files?.length === 1, "A media file is required.")
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      `Max file size is 20MB.`
+    )
+    .refine(
+      (files) => ALL_ACCEPTED_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .png, .webp, .gif, .mp4, and .webm files are accepted."
+    ),
+})

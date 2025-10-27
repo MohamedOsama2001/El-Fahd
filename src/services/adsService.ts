@@ -1,5 +1,5 @@
 import axiosApi from "@/config/axios.config";
-import type { IAddProductRes, IProductRes, IProductsRes, IReelsRes } from "@/interface/ads";
+import type { IAddProductRes, IAddReelsRes, IProductRes, IProductsRes, IReelsRes } from "@/interface/ads";
 
 class AdsService {
   //* products service
@@ -21,7 +21,7 @@ class AdsService {
 
 
   //* reels service
-  async getReels(token: string): Promise<IReelsRes> {
+  async getReel(token: string): Promise<IReelsRes> {
     return (
       await axiosApi.get<IReelsRes>("/ads", {
         headers: {
@@ -29,6 +29,14 @@ class AdsService {
         },
       })
     ).data;
+  }
+  async addReels(reelData:any,token:string){
+    return (await axiosApi.post<IAddReelsRes>("/ads",reelData,{
+      headers:{
+        "Content-Type": "multipart/form-data",
+        Authorization: token ? `Bearer ${token}` : undefined,
+      }
+    }))
   }
 }
 export default new AdsService();
