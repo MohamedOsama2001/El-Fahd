@@ -26,6 +26,22 @@ class AdsQueries {
       }
     })
   }
+  useDeleteProduct(){
+    const queryClient=useQueryClient();
+    return useMutation({
+      mutationFn:({id,token}:{id:string,token:string})=>adsService.deleteProduct(id,token),
+      onSuccess:()=>{
+        queryClient.invalidateQueries({queryKey:[QueryKeys.PRODUCTS]})
+      }
+    })
+  }
+  useGetUserProducts(token:string){
+    return useQuery({
+      queryKey:[QueryKeys.USER_PRODUCTS],
+      queryFn:()=>adsService.getUserProducts(token),
+      enabled:!!token
+    })
+  }
   //* reels query
   useGetReels(token: string) {
     return useQuery({
@@ -42,6 +58,22 @@ class AdsQueries {
         queryClient.invalidateQueries({queryKey:[QueryKeys.REELS]})
       }
     })  
+  }
+  useDeleteReel(){
+    const queryClient=useQueryClient();
+    return useMutation({
+      mutationFn:({id,token}:{id:string,token:string})=>adsService.deleteReel(id,token),
+      onSuccess:()=>{
+        queryClient.invalidateQueries({queryKey:[QueryKeys.PRODUCTS]})
+      }
+    })
+  }
+  useGetUserReels(token:string){
+    return useQuery({
+      queryKey:[QueryKeys.USER_PRODUCTS],
+      queryFn:()=>adsService.getUserReels(token),
+      enabled:!!token
+    })
   }
 }
 export default new AdsQueries();

@@ -1,6 +1,9 @@
 import type { ICategory } from ".";
 import type { IUserData } from "./auth";
-
+export interface IApiMessageRes {
+  status: string;
+  message: string;
+}
 //* products
 export interface IProductData {
   _id: string;
@@ -28,10 +31,8 @@ export interface IProductRes {
   status: string;
   data: IProductData;
 }
-export interface IAddProductRes{
-  status:string;
-  message:string
-}
+export type IAddProductRes=IApiMessageRes
+export type IDeleteProductRes=IApiMessageRes
 //* reels
 export interface IReelData {
   _id: string;
@@ -52,3 +53,4 @@ export interface IAddReelsRes{
   status:string;
   message:string
 }
+export type IDeleteReelRes = IApiMessageRes;

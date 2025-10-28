@@ -1,5 +1,5 @@
 import axiosApi from "@/config/axios.config";
-import type { IAddProductRes, IAddReelsRes, IProductRes, IProductsRes, IReelsRes } from "@/interface/ads";
+import type { IAddProductRes, IAddReelsRes, IDeleteProductRes, IDeleteReelRes, IProductRes, IProductsRes, IReelsRes } from "@/interface/ads";
 
 class AdsService {
   //* products service
@@ -15,6 +15,20 @@ class AdsService {
         "Content-Type": "multipart/form-data",
         Authorization: token ? `Bearer ${token}` : undefined,
 
+      }
+    })).data
+  }
+  async deleteProduct(id:string,token:string){
+    return (await axiosApi.delete<IDeleteProductRes>(`/products/${id}`,{
+      headers:{
+        Authorization: token ? `Bearer ${token}` : undefined,
+      }
+    })).data
+  }
+  async getUserProducts(token:string){
+    return (await axiosApi.get<IProductsRes>("/products/user",{
+      headers:{
+        Authorization: token ? `Bearer ${token}` : undefined,
       }
     })).data
   }
@@ -37,6 +51,20 @@ class AdsService {
         Authorization: token ? `Bearer ${token}` : undefined,
       }
     }))
+  }
+  async deleteReel(id:string,token:string){
+    return (await axiosApi.delete<IDeleteReelRes>(`/products/${id}`,{
+      headers:{
+        Authorization: token ? `Bearer ${token}` : undefined,
+      }
+    })).data
+  }
+  async getUserReels(token:string){
+    return (await axiosApi.get<IReelsRes>("/ads/user",{
+      headers:{
+        Authorization: token ? `Bearer ${token}` : undefined,
+      }
+    })).data
   }
 }
 export default new AdsService();

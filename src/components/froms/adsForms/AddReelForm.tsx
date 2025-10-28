@@ -1,5 +1,3 @@
-"use client";
-
 import * as z from "zod";
 import axios from "axios";
 import { useState } from "react";
@@ -26,8 +24,9 @@ import cookieService from "@/utils/cookieService";
 import { reelSchema } from "@/validations/adsValidation";
 import { toast } from "react-toastify";
 import FormButton from "@/components/ui/FormButton";
+import type { MediaType } from "@/types";
 
-type MediaType = "image" | "video";
+
 type ReelFormValues = z.infer<typeof reelSchema>;
 
 export function AddReelForm() {
