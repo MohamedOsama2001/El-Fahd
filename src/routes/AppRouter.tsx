@@ -8,6 +8,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import Favourites from "@/pages/Favourites";
 import AddProduct from "@/pages/ads/AddProduct";
 import AddReel from "@/pages/ads/AddReel";
+import { MyAds } from "@/pages/ads/MyAds";
 function AppRouter() {
   return (
     <>
@@ -36,7 +37,8 @@ function AppRouter() {
               }
             />
             <Route path="/add-reel" element={<ProtectedRoutes><AddReel/></ProtectedRoutes>}/>
-          </Route>
+            <Route path="/my-ads" element={<ProtectedRoutes><MyAds/></ProtectedRoutes>}/>
+           </Route>
           //* not found routes
           <Route path="*" element={<p>Page Not Found</p>} />
         </Routes>

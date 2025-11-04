@@ -64,13 +64,13 @@ class AdsQueries {
     return useMutation({
       mutationFn:({id,token}:{id:string,token:string})=>adsService.deleteReel(id,token),
       onSuccess:()=>{
-        queryClient.invalidateQueries({queryKey:[QueryKeys.PRODUCTS]})
+        queryClient.invalidateQueries({queryKey:[QueryKeys.REELS]})
       }
     })
   }
   useGetUserReels(token:string){
     return useQuery({
-      queryKey:[QueryKeys.USER_PRODUCTS],
+      queryKey:[QueryKeys.USER_REELS],
       queryFn:()=>adsService.getUserReels(token),
       enabled:!!token
     })

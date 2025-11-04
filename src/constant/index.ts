@@ -70,3 +70,5 @@ export const ADD_PRODUCT_FORM_INPUTS: IAddProductInputs[] = [
         type: "text",
     },
 ];
+
+

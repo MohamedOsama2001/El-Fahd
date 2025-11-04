@@ -53,7 +53,7 @@ class AdsService {
     }))
   }
   async deleteReel(id:string,token:string){
-    return (await axiosApi.delete<IDeleteReelRes>(`/products/${id}`,{
+    return (await axiosApi.delete<IDeleteReelRes>(`/ads/${id}`,{
       headers:{
         Authorization: token ? `Bearer ${token}` : undefined,
       }
