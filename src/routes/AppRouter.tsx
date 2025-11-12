@@ -9,6 +9,9 @@ import Favourites from "@/pages/Favourites";
 import AddProduct from "@/pages/ads/AddProduct";
 import AddReel from "@/pages/ads/AddReel";
 import { MyAds } from "@/pages/ads/MyAds";
+import UpdateProduct from "@/pages/ads/UpdateProduct";
+import UpdateReel from "@/pages/ads/UpdateReel";
+import Settings from "@/pages/settings";
 function AppRouter() {
   return (
     <>
@@ -38,6 +41,9 @@ function AppRouter() {
             />
             <Route path="/add-reel" element={<ProtectedRoutes><AddReel/></ProtectedRoutes>}/>
             <Route path="/my-ads" element={<ProtectedRoutes><MyAds/></ProtectedRoutes>}/>
+            <Route path={`/ads/products/:id/edit`} element={<ProtectedRoutes><UpdateProduct/></ProtectedRoutes>}/>
+            <Route path={`/ads/reels/:id/edit`} element={<ProtectedRoutes><UpdateReel/></ProtectedRoutes>}/>
+            <Route path="/settings" element={<ProtectedRoutes><Settings/></ProtectedRoutes>} />
            </Route>
           //* not found routes
           <Route path="*" element={<p>Page Not Found</p>} />

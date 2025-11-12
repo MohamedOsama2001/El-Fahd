@@ -16,6 +16,11 @@ export const productSchema = z.object({
     .min(1, "At least one image is required.")
     .max(3, "You can upload a maximum of 3 images."),
 });
+
+export const updateProductSchema = productSchema.extend({
+  images: z.array(z.instanceof(File)).max(3, "You can upload a maximum of 3 images.").optional(),
+});
+
 //* reel schema
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -32,8 +37,7 @@ export const reelSchema=z.object({
     .regex(/^\+?[0-9\s-]{10,15}$/, { message: "Please enter a valid phone number." }),
     
   media: z
-    .instanceof(FileList)
-    .refine((files) => files?.length === 1, "A media file is required.")
+    .instanceof(FileList).refine((files) => files?.length === 1, "Media file is required.")
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Max file size is 20MB.`
@@ -42,4 +46,14 @@ export const reelSchema=z.object({
       (files) => ALL_ACCEPTED_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .png, .webp, .gif, .mp4, and .webm files are accepted."
     ),
-})
+});
+
+//* update reel schema
+export const updateReelSchema = reelSchema.extend({
+  media: z.instanceof(FileList).optional().refine(
+    (files) => !files || files.length === 0 || (files.length === 1 && files[0].size <= MAX_FILE_SIZE && ALL_ACCEPTED_TYPES.includes(files[0].type)),
+    {
+      message: "Invalid file. Max size is 20MB and allowed types are .jpg, .png, .webp, .gif, .mp4, .webm.",
+    }
+  ),
+});

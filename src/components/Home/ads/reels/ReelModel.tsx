@@ -14,7 +14,7 @@ function ReelModel(props: Props) {
           <div className="relative bg-white rounded-lg p-4 max-w-lg w-full">
             {/* Close Button */}
             <button
-              className="absolute -top-4 -right-4 hover:bg-red-400 bg-red-500 rounded-full w-10 h-10 text-red-500 hover:text-red-700"
+              className="flex justify-center items-center absolute cursor-pointer -top-4 -right-4 hover:bg-red/90 bg-red rounded-full w-10 h-10 text-red hover:text-red-700"
               onClick={onClose}
             >
               <IoMdClose className="text-white"/>

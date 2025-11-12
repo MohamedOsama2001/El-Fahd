@@ -33,6 +33,9 @@ export interface IProductRes {
 }
 export type IAddProductRes=IApiMessageRes
 export type IDeleteProductRes=IApiMessageRes
+export interface IUpdateProductRes extends IApiMessageRes{
+  data:IProductData;
+}
 //* reels
 export interface IReelData {
   _id: string;
@@ -49,8 +52,15 @@ export interface IReelsRes{
     status:string;
     data:IReelData[];
 }
+export interface IReelRes{
+  status:string;
+  data:IReelData;
+}
 export interface IAddReelsRes{
   status:string;
   message:string
 }
 export type IDeleteReelRes = IApiMessageRes;
+export interface IUpdateReelRes extends IApiMessageRes{
+  data:IReelData;
+}
