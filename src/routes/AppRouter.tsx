@@ -12,6 +12,7 @@ import { MyAds } from "@/pages/ads/MyAds";
 import UpdateProduct from "@/pages/ads/UpdateProduct";
 import UpdateReel from "@/pages/ads/UpdateReel";
 import Settings from "@/pages/settings";
+import CategoryProducts from "@/pages/CategoryProducts";
 function AppRouter() {
   return (
     <>
@@ -21,6 +22,7 @@ function AppRouter() {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
+            <Route path="/category/:id" element={<CategoryProducts />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             //* protected routes
             <Route

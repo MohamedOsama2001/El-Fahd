@@ -64,7 +64,7 @@ const ProductCard: React.FC<IProps> = ({ product }) => {
               {product.title}
             </h3>
             <span className="font-bold text-red">
-              {formatPrice(product.price)}
+              {formatPrice(parseFloat(product.price))}
             </span>
           </div>
           <p className="text-gray text-sm mb-3 line-clamp-2">
