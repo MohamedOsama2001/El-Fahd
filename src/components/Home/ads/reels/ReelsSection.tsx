@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ads from "@/lib/queries/ads";
 import cookieService from "@/utils/cookieService";
@@ -16,8 +16,8 @@ function ReelsSection() {
   const { data: reels, isLoading, isError } = ads.useGetReels(token);
   const [isModelOpen, setIsModelOpen] = useState(false);
   const [selectedReel, setSelectedReel] = useState<IReelData | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const swiperRef = useRef(null);
+
+
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
     if (isModelOpen) {
@@ -31,20 +31,14 @@ function ReelsSection() {
   const handleReelClick = (reel: IReelData) => {
     setSelectedReel(reel);
     setIsModelOpen(true);
-    setIsPaused(true);
+
   };
   const handleClose = () => {
     setIsModelOpen(false);
     setSelectedReel(null);
-    setIsPaused(false);
-  };
-  const handleMouseEnter = () => {
-    setIsPaused(true);
+
   };
 
-  const handleMouseLeave = () => {
-    if (!isModelOpen) setIsPaused(false);
-  };
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-40">
@@ -66,21 +60,14 @@ function ReelsSection() {
   }
   return (
     <>
-      <section className="py-10 overflow-hidden">
+      <section className="py-10 overflow-x-auto">
         <div
           className="flex gap-3"
-          ref={swiperRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+
+
         >
           {(reels?.data.length ?? 0) > 0 && (
-            <div
-              className={`flex gap-3 animate-slide ${isPaused ? "paused" : ""}`}
-              style={{
-                width: `${((reels?.data.length ?? 0) + 1) * 32}rem`,
-                animationPlayState: isPaused ? "paused" : "running",
-              }}
-            >
+            <div className="flex gap-3">
               <Link to="add-reel">
                 <div className="flex-shrink-0 w-32 h-32 rounded-full font-bold bg-white border-2 border-red cursor-pointer flex items-center justify-center">
                   <FaPlus className="me-2" />
@@ -94,14 +81,7 @@ function ReelsSection() {
                   onClick={() => handleReelClick(reel)}
                 />
               ))}
-              {/* Duplicate reels for seamless looping */}
-              {reels?.data.map((reel, idx) => (
-                <ReelItem
-                  key={`duplicate-${idx}`}
-                  reel={reel}
-                  onClick={() => handleReelClick(reel)}
-                />
-              ))}
+
             </div>
           )}
         </div>
