@@ -61,18 +61,20 @@ export function UpdateProductForm() {
   });
 
   useEffect(() => {
-    if (productData?.data) {
-      const { images, category, ...rest } = productData.data;
-      form.reset({
-        ...rest,
-        category: category._id,
-        subCategory: productData.data.subCategory,
-        paymentMethod: productData.data.paymentMethod,
-        contactMethod: productData.data.contactMethod,
-      });
-      setImagePreviews(images);
-    }
-  }, [productData, form]);
+  if (productData?.data && categoryData?.data) {
+    const { images, category, ...rest } = productData.data;
+    
+    form.reset({
+      ...rest,
+      category: category._id,
+      subCategory: productData.data.subCategory,
+      paymentMethod: productData.data.paymentMethod,
+      contactMethod: productData.data.contactMethod,
+    });
+    
+    setImagePreviews(images);
+  }
+}, [productData?.data._id,categoryData?.data, form]);
 
   const onSubmit = (values: UpdateProductFormValues) => {
     const formData = new FormData();
@@ -133,7 +135,7 @@ export function UpdateProductForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-bold text-base">Category</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select key={field.value} onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a category" />
@@ -165,7 +167,7 @@ export function UpdateProductForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-bold text-base">Sub-category</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select key={field.value} onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a sub-category" />
@@ -245,7 +247,7 @@ export function UpdateProductForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-bold text-base">Payment Method</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select key={field.value} onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a payment method" />
@@ -267,7 +269,7 @@ export function UpdateProductForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-bold text-base">Preferred Contact Method</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select key={field.value} onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a contact method" />
