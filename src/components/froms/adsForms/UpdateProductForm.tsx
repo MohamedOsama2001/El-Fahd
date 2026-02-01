@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetCategory } from "@/lib/queries/category";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { updateProductSchema } from "@/validations/adsValidation";
 import FormButton from "@/components/ui/FormButton";
 import cookieService from "@/utils/cookieService";
@@ -60,23 +60,35 @@ export function UpdateProductForm() {
     },
   });
 
+  // Fix: Use stable reference and only depend on productData._id
   useEffect(() => {
-  if (productData?.data && categoryData?.data) {
-    const { images, category, ...rest } = productData.data;
-    
-    form.reset({
-      ...rest,
-      category: category._id,
-      subCategory: productData.data.subCategory,
-      paymentMethod: productData.data.paymentMethod,
-      contactMethod: productData.data.contactMethod,
-    });
-    
-    setImagePreviews(images);
-  }
-}, [productData?.data._id,categoryData?.data, form]);
+    if (productData?.data && categoryData?.data) {
+      const { images, category, ...rest } = productData.data;
+      
+      form.reset({
+        ...rest,
+        category: category._id,
+        subCategory: productData.data.subCategory,
+        paymentMethod: productData.data.paymentMethod,
+        contactMethod: productData.data.contactMethod,
+      });
+      
+      setImagePreviews(images);
+    }
+  }, [productData?.data._id, categoryData?.data, form.reset]);
 
-  const onSubmit = (values: UpdateProductFormValues) => {
+  // Cleanup image preview URLs to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((url) => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [imagePreviews]);
+
+  const onSubmit = useCallback((values: UpdateProductFormValues) => {
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
       if (key === "images" && Array.isArray(value) && value.length > 0) {
@@ -103,20 +115,30 @@ export function UpdateProductForm() {
         },
       }
     );
-  };
+  }, [id, token, updateProduct, navigate]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length) {
+      // Revoke old preview URLs to prevent memory leaks
+      imagePreviews.forEach((url) => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+
       form.setValue("images", files);
       const previews = files.map((file) => URL.createObjectURL(file));
       setImagePreviews(previews);
     }
-  };
+  }, [form, imagePreviews]);
 
   const selectedCategoryId = form.watch("category");
-  const selectedCategory = categoryData?.data.find(
-    (cat) => cat._id === selectedCategoryId
+  
+  // Memoize selected category to prevent recalculation
+  const selectedCategory = useMemo(
+    () => categoryData?.data.find((cat) => cat._id === selectedCategoryId),
+    [categoryData?.data, selectedCategoryId]
   );
 
   if (isLoadingProduct) {

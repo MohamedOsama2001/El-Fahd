@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo, memo } from "react";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,38 +6,64 @@ import type { IProductData } from "@/interface/ads";
 import { Badge } from "@/components/ui/badge";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
+import { selectIsAuthenticated } from "@/store/selectors";
 import favHandler from "@/utils/favHandler";
+import LazyImage from "@/components/common/LazyImage";
 
 interface IProps {
   product: IProductData;
 }
 
-const ProductCard: React.FC<IProps> = ({ product }) => {
+// Move pure functions outside component to prevent recreation on every render
+const formatPrice = (price: number): string => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(price);
+};
+
+const truncateText = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "...";
+};
+
+const ProductCard: React.FC<IProps> = memo(({ product }) => {
   const dispatch = useDispatch();
-  const { favourites } = useSelector((state: RootState) => state.favourites);
-  const isInFavourites = favourites.some((item) => item._id === product._id);
-  const { isAuthanticated } = useSelector((state: RootState) => state.auth);
-  const onFavClick = (e: React.MouseEvent) => {
+  
+  // Use memoized selector for better performance
+  const isInFavourites = useSelector((state: RootState) => 
+    state.favourites.favourites.some((item) => item._id === product._id)
+  );
+  const isAuthanticated = useSelector(selectIsAuthenticated);
+  
+  // Memoize the click handler to prevent recreation on every render
+  const onFavClick = useCallback((e: React.MouseEvent) => {
     favHandler({ e, isAuthanticated, isInFavourites, dispatch, product });
-  };
+  }, [isAuthanticated, isInFavourites, dispatch, product]);
 
-  const formatPrice = (price: number): string => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  };
+  // Memoize formatted price
+  const formattedPrice = useMemo(
+    () => formatPrice(parseFloat(product.price)),
+    [product.price]
+  );
 
-  const truncateText = (text: string, maxLength: number): string => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + "...";
-  };
+  // Memoize truncated description
+  const truncatedDescription = useMemo(
+    () => truncateText(product.description, 100),
+    [product.description]
+  );
+
+  // Memoize formatted date
+  const formattedDate = useMemo(
+    () => new Date(product.createdAt).toLocaleDateString(),
+    [product.createdAt]
+  );
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
       <Link to={`/product/${product._id}`} className="block">
         <div className="relative h-48 overflow-hidden">
-          <img
+          <LazyImage
             src={product.images[0]}
             alt={product.title}
             className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
@@ -64,15 +90,15 @@ const ProductCard: React.FC<IProps> = ({ product }) => {
               {product.title}
             </h3>
             <span className="font-bold text-red">
-              {formatPrice(parseFloat(product.price))}
+              {formattedPrice}
             </span>
           </div>
           <p className="text-gray text-sm mb-3 line-clamp-2">
-            {truncateText(product.description, 100)}
+            {truncatedDescription}
           </p>
           <div className="flex justify-between items-center text-sm text-gray">
             <span>{product.location}</span>
-            <span>{new Date(product.createdAt).toLocaleDateString()}</span>
+            <span>{formattedDate}</span>
           </div>
         </div>
         <div className="px-4 pb-4">
@@ -83,6 +109,8 @@ const ProductCard: React.FC<IProps> = ({ product }) => {
       </Link>
     </div>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;

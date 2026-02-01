@@ -1,7 +1,8 @@
-import { useParams } from "react-router-dom";
 import { useMemo } from "react";
+import { useParams } from "react-router-dom";
 import adsQueries from "@/lib/queries/ads";
 import ProductCard from "@/components/Home/ads/products/ProductCard";
+import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
 import { useGetCategory } from "@/lib/queries/category";
 import { Loader2 } from "lucide-react";
 
@@ -10,13 +11,13 @@ function CategoryProducts() {
   const { data: productsData, isLoading: productsLoading, isError: productsError } = adsQueries.useGetProducts();
   const { data: categoriesData } = useGetCategory();
 
-  //*  Filter products by category ID
+  //*  Filter products by category ID - already optimized with useMemo!
   const filteredProducts = useMemo(() => {
     if (!productsData?.data || !id) return [];
     return productsData.data.filter((product) => product.category._id === id);
   }, [productsData, id]);
 
-  //* Get category name
+  //* Get category name - already optimized with useMemo!
   const categoryName = useMemo(() => {
     if (!categoriesData?.data || !id) return "";
     const category = categoriesData.data.find((cat) => cat._id === id);
@@ -25,8 +26,16 @@ function CategoryProducts() {
 
   if (productsLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-12 w-12 animate-spin text-red" />
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <div className="h-8 bg-gray-200 rounded w-64 animate-pulse mb-2" />
+          <div className="h-4 bg-gray-200 rounded w-32 animate-pulse" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <ProductCardSkeleton key={idx} />
+          ))}
+        </div>
       </div>
     );
   }

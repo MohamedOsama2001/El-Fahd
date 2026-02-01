@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 function Favourites() {
   const { favourites } = useSelector((state: RootState) => state.favourites);
+  
   return (
     <>
       <PageHeadr
@@ -14,9 +15,9 @@ function Favourites() {
       />
       {favourites.length > 0 ? (
         <div className="w-3/4 m-auto">
-          <div className="grid grid-col-1 md:grid-cols-2  gap-8 my-10">
-            {favourites.map((fav, idx) => (
-              <ProductCard key={idx} product={fav} />
+          <div className="grid grid-col-1 md:grid-cols-2 gap-8 my-10">
+            {favourites.map((fav) => (
+              <ProductCard key={fav._id} product={fav} />
             ))}
           </div>
         </div>

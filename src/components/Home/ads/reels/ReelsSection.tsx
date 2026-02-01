@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import ads from "@/lib/queries/ads";
 import cookieService from "@/utils/cookieService";
@@ -9,6 +9,7 @@ import { FaPlus } from "react-icons/fa";
 import "@/App.css";
 import ReelModel from "./ReelModel";
 import ReelItem from "./ReelItem";
+import ReelSkeleton from "@/components/common/ReelSkeleton";
 
 function ReelsSection() {
   const token = cookieService.getToken()!;
@@ -16,7 +17,6 @@ function ReelsSection() {
   const { data: reels, isLoading, isError } = ads.useGetReels(token);
   const [isModelOpen, setIsModelOpen] = useState(false);
   const [selectedReel, setSelectedReel] = useState<IReelData | null>(null);
-
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -28,24 +28,31 @@ function ReelsSection() {
     }
     return () => clearTimeout(timer);
   }, [isModelOpen]);
-  const handleReelClick = (reel: IReelData) => {
+
+  // Memoize handlers to prevent recreation on every render
+  const handleReelClick = useCallback((reel: IReelData) => {
     setSelectedReel(reel);
     setIsModelOpen(true);
+  }, []);
 
-  };
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsModelOpen(false);
     setSelectedReel(null);
-
-  };
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-40">
-        <div className="w-10 h-10 border-4 border-red-500 border-dashed rounded-full animate-spin"></div>
-      </div>
+      <section className="py-10 overflow-x-auto">
+        <div className="flex gap-3">
+          {/* Show 4 skeleton reels during loading */}
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <ReelSkeleton key={idx} />
+          ))}
+        </div>
+      </section>
     );
   }
+
   if (isError || !token || !isAuthanticated) {
     return (
       <div className="flex justify-center w-full py-10">
@@ -58,14 +65,11 @@ function ReelsSection() {
       </div>
     );
   }
+
   return (
     <>
       <section className="py-10 overflow-x-auto">
-        <div
-          className="flex gap-3"
-
-
-        >
+        <div className="flex gap-3">
           {(reels?.data.length ?? 0) > 0 && (
             <div className="flex gap-3">
               <Link to="add-reel">
@@ -74,14 +78,13 @@ function ReelsSection() {
                   Add Reel
                 </div>
               </Link>
-              {reels?.data.map((reel, idx) => (
+              {reels?.data.map((reel) => (
                 <ReelItem
-                  key={idx}
+                  key={reel._id}
                   reel={reel}
                   onClick={() => handleReelClick(reel)}
                 />
               ))}
-
             </div>
           )}
         </div>
